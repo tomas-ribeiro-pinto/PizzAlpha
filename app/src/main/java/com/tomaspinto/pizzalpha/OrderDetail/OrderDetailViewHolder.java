@@ -17,8 +17,8 @@ public class OrderDetailViewHolder extends RecyclerView.ViewHolder {
 
     public OrderDetailViewHolder(@NonNull View itemView) {
         super(itemView);
-        orderId = itemView.findViewById(R.id.orderId);
-        totalPrice = itemView.findViewById(R.id.totalPrice);
+        orderId = itemView.findViewById(R.id.order);
+        totalPrice = itemView.findViewById(R.id.table);
         date = itemView.findViewById(R.id.date);
     }
 }

@@ -19,7 +19,7 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <TextView
-            android:id="@+id/totalPrice"
+            android:id="@+id/table"
             android:layout_width="93dp"
             android:layout_height="wrap_content"
             android:text="£ 1.59"

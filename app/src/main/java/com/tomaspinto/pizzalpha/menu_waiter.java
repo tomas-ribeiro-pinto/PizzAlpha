@@ -55,11 +55,8 @@ public class menu_waiter extends AppCompatActivity {
         Table table = bundle.getParcelable("table");
         textView.setText(String.valueOf(table.tableId));
 
-        // Creating a new order and setting its table
+        // Creating a new order
         order = new Order();
-        order.date = new Date();
-        order.table = table;
-        order.waiter = "John";
 
         // Setting other variables
         price = findViewById(R.id.price);
@@ -72,6 +69,7 @@ public class menu_waiter extends AppCompatActivity {
                 Intent intent = new Intent(menu_waiter.this, reviewOrder.class);
                 intent.putParcelableArrayListExtra("orderProducts", orderProducts);
                 intent.putExtra("total", price.getText());
+                intent.putExtra("table", table);
                 startActivity(intent);
             }
         });

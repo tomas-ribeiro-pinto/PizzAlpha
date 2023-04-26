@@ -65,6 +65,10 @@ public class AppRepository {
         return order;
     }
 
+    public void updateOrder(boolean is_cooked, int id) {
+        orderDao.updateOrder(is_cooked,id);
+    }
+
     public List<Product> getProductList() {
         productList = productDao.getAll();
         return productList;

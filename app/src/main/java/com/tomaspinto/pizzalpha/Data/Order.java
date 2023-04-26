@@ -29,15 +29,20 @@ public class Order implements Parcelable {
     public Date date;
     @ColumnInfo(name = "waiter")
     public String waiter;
+    @ColumnInfo(name = "is_cooked")
+    public boolean is_cooked;
 
     //public List<Product> products;
 
     public Order(){}
 
+
     protected Order(Parcel in) {
         orderId = in.readInt();
+        table = in.readParcelable(Table.class.getClassLoader());
         guestNumber = in.readInt();
         waiter = in.readString();
+        is_cooked = in.readByte() != 0;
     }
 
     public static final Creator<Order> CREATOR = new Creator<Order>() {
@@ -60,8 +65,10 @@ public class Order implements Parcelable {
     @Override
     public void writeToParcel(@NonNull Parcel dest, int flags) {
         dest.writeInt(orderId);
+        dest.writeParcelable(table, flags);
         dest.writeInt(guestNumber);
         dest.writeString(waiter);
+        dest.writeByte((byte) (is_cooked ? 1 : 0));
     }
 
     public static double getOrderTotal(List<OrderProduct> orderProducts)

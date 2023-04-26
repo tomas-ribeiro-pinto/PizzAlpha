@@ -20,6 +20,7 @@ import com.tomaspinto.pizzalpha.Data.OrderProduct;
 import com.tomaspinto.pizzalpha.Data.Order;
 import com.tomaspinto.pizzalpha.Data.Product;
 import com.tomaspinto.pizzalpha.Data.ProductDao;
+import com.tomaspinto.pizzalpha.Data.Table;
 import com.tomaspinto.pizzalpha.Slip.SlipAdapter;
 import com.tomaspinto.pizzalpha.Slip.SlipItem;
 
@@ -42,6 +43,7 @@ public class reviewOrder extends AppCompatActivity {
         setContentView(R.layout.activity_review_order);
         Bundle bundle = getIntent().getExtras();
         orderProducts = bundle.getParcelableArrayList("orderProducts");
+        Table table = bundle.getParcelable("table");
         Order order = orderProducts.get(0).order;
 
         String total = bundle.getString("total");
@@ -53,6 +55,8 @@ public class reviewOrder extends AppCompatActivity {
 
         sendButton.setOnClickListener(v -> {
             order.date = new Date();
+            order.table = table;
+            order.waiter = "John";
             db.insert(order);
             Order orderSaved = db.getOrderList().get(db.getOrderList().size() - 1);
             for(OrderProduct product : orderProducts)

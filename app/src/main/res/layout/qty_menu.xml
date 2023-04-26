@@ -64,11 +64,12 @@
             <EditText
                 android:id="@+id/itemQty"
                 android:layout_width="56dp"
-                android:layout_height="39dp"
+                android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
                 android:layout_marginBottom="60dp"
                 android:inputType="number"
                 android:minEms="1"
+                android:maxLength="2"
                 android:text="1"
                 android:textAlignment="center"
                 android:textAllCaps="false"

@@ -18,7 +18,7 @@ public class SlipViewHolder extends RecyclerView.ViewHolder {
     public SlipViewHolder(@NonNull View itemView) {
         super(itemView);
         quantity = itemView.findViewById(R.id.quantity);
-        totalPrice = itemView.findViewById(R.id.totalPrice);
+        totalPrice = itemView.findViewById(R.id.table);
         product = itemView.findViewById(R.id.product);
     }
 }

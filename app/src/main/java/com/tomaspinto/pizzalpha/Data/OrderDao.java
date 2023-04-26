@@ -26,4 +26,7 @@ public interface OrderDao {
 
     @Query("SELECT * FROM `order` WHERE orderId = :id")
     Order getOrder(int id);
+
+    @Query("UPDATE `order` SET is_cooked=:is_cooked WHERE orderId = :id")
+    void updateOrder(boolean is_cooked, int id);
 }
