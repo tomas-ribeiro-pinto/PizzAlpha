@@ -23,4 +23,7 @@ public interface IngredientDao {
 
     @Query("SELECT * FROM `ingredient`")
     List<Ingredient> getAll();
+
+    @Query("SELECT * FROM `ingredient` WHERE ingredientId = :id")
+    Ingredient get(int id);
 }

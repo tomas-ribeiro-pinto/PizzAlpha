@@ -19,24 +19,44 @@ public class DbSeeder {
              // Create Ingredients List
              Ingredient ing1 = new Ingredient(){{name = "Tomato Sauce";cost = 0;}};
              db.insert(ing1);
+             Ingredient finalIng1 = db.getIngredientList().get(db.getIngredientList().size() - 1);
+
              Ingredient ing2 = new Ingredient(){{name = "Cheese";cost = 0;}};
              db.insert(ing2);
+             Ingredient finalIng2 = db.getIngredientList().get(db.getIngredientList().size() - 1);
+
              Ingredient ing3 = new Ingredient(){{name = "Pepperoni";cost = 0;}};
              db.insert(ing3);
+             Ingredient finalIng3 = db.getIngredientList().get(db.getIngredientList().size() - 1);
+
              Ingredient ing4 = new Ingredient(){{name = "Olives";cost = 0;}};
              db.insert(ing4);
+             Ingredient finalIng4 = db.getIngredientList().get(db.getIngredientList().size() - 1);
+
              Ingredient ing5 = new Ingredient(){{name = "Mushrooms";cost = 0;}};
              db.insert(ing5);
+             Ingredient finalIng5 = db.getIngredientList().get(db.getIngredientList().size() - 1);
+
              Ingredient ing6 = new Ingredient(){{name = "Tomatoes";cost = 0;}};
              db.insert(ing6);
+             Ingredient finalIng6 = db.getIngredientList().get(db.getIngredientList().size() - 1);
+
              Ingredient ing7 = new Ingredient(){{name = "Ham";cost = 0;}};
              db.insert(ing7);
+             Ingredient finalIng7 = db.getIngredientList().get(db.getIngredientList().size() - 1);
+
              Ingredient ing8 = new Ingredient(){{name = "BBQ Sauce";cost = 0;}};
              db.insert(ing8);
+             Ingredient finalIng8 = db.getIngredientList().get(db.getIngredientList().size() - 1);
+
              Ingredient ing9 = new Ingredient(){{name = "Pineapple";cost = 0;}};
              db.insert(ing9);
+             Ingredient finalIng9 = db.getIngredientList().get(db.getIngredientList().size() - 1);
+
              Ingredient ing10 = new Ingredient(){{name = "Onions";cost = 0;}};
              db.insert(ing10);
+             Ingredient finalIng10 = db.getIngredientList().get(db.getIngredientList().size() - 1);
+
              // Create Extra Ingredients
              Ingredient ing11 = new Ingredient(){{type="EXTRA"; name = "Extra Cheese";cost = 0.5;}};
              db.insert(ing11);
@@ -52,7 +72,7 @@ public class DbSeeder {
              // Create Products List and assign ingredients to pizzas
              Product margarita = new Product(){
              {
-             name = "Margarita";
+             name = "Margherita";
              basePrice = 9.99;
              tax = Math.round(basePrice) * 0.1;
              category = Category.PIZZAS;
@@ -61,8 +81,9 @@ public class DbSeeder {
              db.insert(margarita);
 
              // Tomato Sauce, cheese
-             ProductIngredient pi1 = new ProductIngredient(){{product=margarita; ingredient=ing1;}};
-             ProductIngredient pi2 = new ProductIngredient(){{product=margarita; ingredient=ing2;}};
+             Product finalMargarita = db.getProductList().get(db.getProductList().size() - 1);;
+             ProductIngredient pi1 = new ProductIngredient(){{product= finalMargarita; ingredient= finalIng1;}};
+             ProductIngredient pi2 = new ProductIngredient(){{product= finalMargarita; ingredient= finalIng2;}};
              db.insert(pi1); db.insert(pi2);
 
              Product hawaii = new Product(){
@@ -75,11 +96,12 @@ public class DbSeeder {
              };
              db.insert(hawaii);
 
+             Product finalHawaii = db.getProductList().get(db.getProductList().size() - 1);
              // Tomato Sauce, cheese, ham, pineapple
-             ProductIngredient pi3 = new ProductIngredient(){{product=hawaii; ingredient=ing1;}};
-             ProductIngredient pi4 = new ProductIngredient(){{product=hawaii; ingredient=ing2;}};
-             ProductIngredient pi5 = new ProductIngredient(){{product=hawaii; ingredient=ing7;}};
-             ProductIngredient pi6 = new ProductIngredient(){{product=hawaii; ingredient=ing9;}};
+             ProductIngredient pi3 = new ProductIngredient(){{product=finalHawaii; ingredient=finalIng1;}};
+             ProductIngredient pi4 = new ProductIngredient(){{product=finalHawaii; ingredient=finalIng2;}};
+             ProductIngredient pi5 = new ProductIngredient(){{product=finalHawaii; ingredient=finalIng7;}};
+             ProductIngredient pi6 = new ProductIngredient(){{product=finalHawaii; ingredient=finalIng9;}};
              db.insert(pi3); db.insert(pi4); db.insert(pi5); db.insert(pi6);
 
              Product bbq = new Product(){
@@ -92,12 +114,13 @@ public class DbSeeder {
              };
              db.insert(bbq);
 
+             Product finalBBQ = db.getProductList().get(db.getProductList().size() - 1);
              // BBQ Sauce, cheese, Pepperoni, Mushrooms, onion
-             ProductIngredient pi7 = new ProductIngredient(){{product=bbq; ingredient=ing1;}};
-             ProductIngredient pi8 = new ProductIngredient(){{product=bbq; ingredient=ing2;}};
-             ProductIngredient pi9 = new ProductIngredient(){{product=bbq; ingredient=ing3;}};
-             ProductIngredient pi10 = new ProductIngredient(){{product=bbq; ingredient=ing5;}};
-             ProductIngredient pi11 = new ProductIngredient(){{product=bbq; ingredient=ing10;}};
+             ProductIngredient pi7 = new ProductIngredient(){{product=finalBBQ; ingredient=finalIng1;}};
+             ProductIngredient pi8 = new ProductIngredient(){{product=finalBBQ; ingredient=finalIng2;}};
+             ProductIngredient pi9 = new ProductIngredient(){{product=finalBBQ; ingredient=finalIng3;}};
+             ProductIngredient pi10 = new ProductIngredient(){{product=finalBBQ; ingredient=finalIng5;}};
+             ProductIngredient pi11 = new ProductIngredient(){{product=finalBBQ; ingredient=finalIng10;}};
              db.insert(pi7); db.insert(pi8); db.insert(pi9); db.insert(pi10); db.insert(pi11);
 
              Product coke = new Product(){

@@ -10,8 +10,11 @@ import android.os.Bundle;
 import android.text.Html;
 import android.view.Gravity;
 import android.widget.Button;
+
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
+import android.widget.SearchView;
 import android.widget.TextView;
 
 import com.tomaspinto.pizzalpha.Data.AppDatabase;
@@ -20,9 +23,13 @@ import com.tomaspinto.pizzalpha.Data.OrderProduct;
 import com.tomaspinto.pizzalpha.Data.Order;
 import com.tomaspinto.pizzalpha.Data.Product;
 import com.tomaspinto.pizzalpha.Data.Table;
+import com.tomaspinto.pizzalpha.ui.PopUpClass;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Queue;
 
 public class menu_waiter extends AppCompatActivity {
 
@@ -32,7 +39,6 @@ public class menu_waiter extends AppCompatActivity {
     ImageButton review;
     Order order;
     double total = 0;
-    int currentQty = 0;
     ArrayList<OrderProduct> orderProducts;
     private AppRepository db;
 
@@ -47,7 +53,13 @@ public class menu_waiter extends AppCompatActivity {
         textView = findViewById(R.id.tableLabel);
         Bundle bundle = getIntent().getExtras();
         Table table = bundle.getParcelable("table");
-        textView.setText(table.tableName);
+        textView.setText(String.valueOf(table.tableId));
+
+        // Creating a new order and setting its table
+        order = new Order();
+        order.date = new Date();
+        order.table = table;
+        order.waiter = "John";
 
         // Setting other variables
         price = findViewById(R.id.price);
@@ -55,30 +67,42 @@ public class menu_waiter extends AppCompatActivity {
         review = findViewById(R.id.review);
 
         review.setOnClickListener(v -> {
-            Intent intent = new Intent(menu_waiter.this, reviewOrder.class);
-            intent.putParcelableArrayListExtra("orderProducts", orderProducts);
-            intent.putExtra("total", price.getText());
-            startActivity(intent);
+            if(Integer.parseInt(String.valueOf(qty.getText())) != 0)
+            {
+                Intent intent = new Intent(menu_waiter.this, reviewOrder.class);
+                intent.putParcelableArrayListExtra("orderProducts", orderProducts);
+                intent.putExtra("total", price.getText());
+                startActivity(intent);
+            }
         });
 
-        createMenu(table);
+        createMenu();
     }
 
-    public void createMenu(Table table)
+    public void createMenu()
     {
-        LinearLayout layout = findViewById(R.id.layout);
-        LinearLayout layout1 = findViewById(R.id.layout2);
-        LinearLayout layout2 = findViewById(R.id.layout3);
+        // Setting Layout for menu
+        ScrollView scrollView = findViewById(R.id.scroll);
+        LinearLayout layout = new LinearLayout(this);
+        layout.setOrientation(LinearLayout.VERTICAL);
+        scrollView.addView(layout);
 
-        ArrayList<Button> buttonList = new ArrayList<>();
+        SearchView searchView = findViewById(R.id.searchView);
+
+        Queue<Button> q = createProductButtons();
+        createGrid(q,layout);
+    }
+
+    public Queue<Button> createProductButtons()
+    {
         orderProducts = new ArrayList<OrderProduct>();
+        Queue<Button> buttonList = new LinkedList<Button>();
+        List<Product> productList = db.getProductList();
 
-        int count = 1;
-
-        for(Product product : db.getProductList())
+        for(Product product : productList)
         {
             // Create Button Dynamically
-            Button btn = new Button(layout.getContext());
+            Button btn = new Button(this);
             btn.setText(product.name);
             btn.setTypeface(null, Typeface.BOLD);
             btn.setTextColor(getResources().getColor(R.color.white));
@@ -88,6 +112,7 @@ public class menu_waiter extends AppCompatActivity {
                 btn.setBackgroundTintList(getColorStateList(R.color.black));
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
             params.gravity = Gravity.CENTER;
+            params.weight = 0;
             btn.setLayoutParams(params);
 
             final float scale = getApplicationContext().getResources().getDisplayMetrics().density;
@@ -96,34 +121,51 @@ public class menu_waiter extends AppCompatActivity {
             btn.setHeight((int)(115 * scale));
 
             btn.setOnClickListener(v -> {
-                // Creating a new order and setting its table
-                order = new Order();
-                order.date = new Date();
-                order.table = table;
-                order.waiter = "John";
+                PopUpClass popUp = new PopUpClass();
+                popUp.showQuantityWindow(v, product, order);
 
-                OrderProduct item = new OrderProduct();
-                item.order = order;
-                item.o_product = product;
-                currentQty++;
-                qty.setText(String.valueOf(currentQty));
-                total += item.o_product.basePrice;
-                // set price label to 2 decimal places value of total
-                price.setText("£" + String.format("%.2f", total));
-                orderProducts.add(item);
+                // Setup the listener for this object
+                popUp.setPopUpClassListener(new PopUpClass.PopUpClassListener() {
+                    @Override
+                    public void onAdd(ArrayList<OrderProduct> items) {
+                        for(OrderProduct item : items)
+                        {
+                            total += item.o_product.basePrice;
+                            // set price label to 2 decimal places value of total
+                            price.setText("£" + String.format("%.2f", total));
+                            orderProducts.add(item);
+                        }
+
+                        int currentQty = Integer.parseInt(String.valueOf(qty.getText()));
+                        currentQty += items.size();
+                        qty.setText(String.valueOf(currentQty));
+                    }
+                });
             });
 
-            // Add Button to LinearLayout
-            if (layout != null) {
-                if(count < 4)
-                    layout.addView(btn);
-                else if (count < 7)
-                    layout1.addView(btn);
-                else
-                    layout2.addView(btn);
-            }
-            count++;
+            buttonList.add(btn);
+        }
 
+        return buttonList;
+    }
+
+    public void createGrid(Queue<Button> q, LinearLayout layout)
+    {
+        int numRows = q.size()/3 + q.size()%3;
+        for(int i = numRows; i > 0; i--)
+        {
+            LinearLayout row = new LinearLayout(this);
+            row.setLayoutParams(new LinearLayout.LayoutParams
+                    (LinearLayout.LayoutParams.WRAP_CONTENT,
+                            LinearLayout.LayoutParams.WRAP_CONTENT));
+            for(int j = 1; j <=3; j++)
+            {
+                Button btn = q.peek();
+                row.addView(btn);
+                q.remove();
+            }
+
+            layout.addView(row);
         }
     }
 
@@ -138,7 +180,7 @@ public class menu_waiter extends AppCompatActivity {
             }
         });
 
-        alert.setNegativeButton(Html.fromHtml("<b>"+"Cancel"+"</b>"),
+        alert.setNegativeButton(Html.fromHtml("<b>"+"No"+"</b>"),
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
                     }

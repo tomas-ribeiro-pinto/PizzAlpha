@@ -63,6 +63,17 @@ public class Order implements Parcelable {
         dest.writeInt(guestNumber);
         dest.writeString(waiter);
     }
+
+    public static double getOrderTotal(List<OrderProduct> orderProducts)
+    {
+        double total = 0;
+        for(OrderProduct item : orderProducts)
+        {
+            total += item.o_product.basePrice;
+        }
+
+        return total;
+    }
 }
 
 class DateConverter {

@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.Menu;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.navigation.NavigationView;
@@ -20,16 +21,25 @@ import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import androidx.room.Room;
 
 import com.tomaspinto.pizzalpha.Data.AppDatabase;
 import com.tomaspinto.pizzalpha.Data.AppRepository;
 import com.tomaspinto.pizzalpha.Data.DbSeeder;
+import com.tomaspinto.pizzalpha.Data.Order;
+import com.tomaspinto.pizzalpha.Data.OrderProduct;
 import com.tomaspinto.pizzalpha.Data.Product;
 import com.tomaspinto.pizzalpha.Data.Table;
+import com.tomaspinto.pizzalpha.OrderDetail.OrderDetailAdapter;
+import com.tomaspinto.pizzalpha.OrderDetail.OrderDetailItem;
 import com.tomaspinto.pizzalpha.databinding.ActivityMainBinding;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Queue;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -43,18 +53,14 @@ public class MainActivity extends AppCompatActivity {
 
         db = new AppRepository(AppDatabase.getDatabase(getApplicationContext()));
 
-        if (savedInstanceState != null) {
-            createTables();
-        }
         // When creating Activity seed db in case is not seeded
         DbSeeder.seedDb(db);
 
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        createTables();
-
         setSupportActionBar(binding.appBarMain.toolbar);
+        /**
         binding.appBarMain.fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -62,6 +68,8 @@ public class MainActivity extends AppCompatActivity {
                         .setAction("Action", null).show();
             }
         });
+         **/
+
         DrawerLayout drawer = binding.drawerLayout;
         NavigationView navigationView = binding.navView;
         // Passing each menu ID as a set of Ids because each
@@ -87,52 +95,5 @@ public class MainActivity extends AppCompatActivity {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
         return NavigationUI.navigateUp(navController, mAppBarConfiguration)
                 || super.onSupportNavigateUp();
-    }
-
-    public void createTables()
-    {
-        LinearLayout layout = findViewById(R.id.layout);
-        LinearLayout layout1 = findViewById(R.id.layout2);
-        LinearLayout layout2 = findViewById(R.id.layout3);
-
-        ArrayList<Button> buttonList = new ArrayList<>();
-
-        int count = 1;
-
-        for(Table table : db.getTableList())
-        {
-            // Create Button Dynamically
-            Button btn = new Button(layout.getContext());
-            btn.setText(table.tableName);
-            btn.setTextSize(20);
-            btn.setTypeface(null, Typeface.BOLD);
-            btn.setTextColor(getResources().getColor(R.color.white));
-            btn.setBackgroundTintList(getColorStateList(R.color.orange));
-            btn.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
-
-            final float scale = getApplicationContext().getResources().getDisplayMetrics().density;
-            btn.setWidth((int)(115 * scale));
-            btn.setHeight((int)(115 * scale));
-
-            btn.setOnClickListener(new View.OnClickListener() {
-                public void onClick(View v) {
-                    Intent intent = new Intent(MainActivity.this, menu_waiter.class);
-                    intent.putExtra("table", table);
-                    startActivity(intent);
-                }
-            });
-
-            // Add Button to LinearLayout
-            if (layout != null) {
-                if(count < 4)
-                    layout.addView(btn);
-                else if (count < 7)
-                    layout1.addView(btn);
-                else
-                    layout2.addView(btn);
-            }
-            count++;
-
-        }
     }
 }

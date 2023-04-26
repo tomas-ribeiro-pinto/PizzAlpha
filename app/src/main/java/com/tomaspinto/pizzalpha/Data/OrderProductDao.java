@@ -21,6 +21,9 @@ public interface OrderProductDao{
     @Delete
     void delete(OrderProduct orderProduct);
 
+    @Query("SELECT * FROM `orderproduct` WHERE o_orderId = :id")
+    List<OrderProduct> getAll(int id);
+
     @Query("SELECT * FROM `orderproduct`")
     List<OrderProduct> getAll();
 }

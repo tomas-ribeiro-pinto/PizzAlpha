@@ -32,7 +32,6 @@ public class AppRepository {
         ingredientList = ingredientDao.getAll();
         productList = productDao.getAll();
         tableList = tableDao.getAll();
-        orderProductList = orderProductDao.getAll();
         productIngredientList = productIngredientDao.getAll();
     }
 
@@ -61,6 +60,11 @@ public class AppRepository {
         return orderList;
     }
 
+    public Order getOrder(int id) {
+        Order order = orderDao.getOrder(id);
+        return order;
+    }
+
     public List<Product> getProductList() {
         productList = productDao.getAll();
         return productList;
@@ -71,13 +75,18 @@ public class AppRepository {
         return ingredientList;
     }
 
+    public List<ProductIngredient> getProductIngredientList(int id) {
+        productIngredientList = productIngredientDao.getAll(id);
+        return productIngredientList;
+    }
+
     public List<ProductIngredient> getProductIngredientList() {
         productIngredientList = productIngredientDao.getAll();
         return productIngredientList;
     }
 
-    public List<OrderProduct> getOrderProductList() {
-        orderProductList = orderProductDao.getAll();
+    public List<OrderProduct> getOrderProductList(int id) {
+        orderProductList = orderProductDao.getAll(id);
         return orderProductList;
     }
 
