@@ -16,6 +16,7 @@ import com.tomaspinto.pizzalpha.Data.AppRepository;
 import com.tomaspinto.pizzalpha.Data.Order;
 import com.tomaspinto.pizzalpha.KitchenOrder.KitchenOrderAdapter;
 import com.tomaspinto.pizzalpha.KitchenOrder.KitchenOrderItem;
+import com.tomaspinto.pizzalpha.KitchenOrder.KitchenOrderViewHolder;
 import com.tomaspinto.pizzalpha.R;
 import com.tomaspinto.pizzalpha.databinding.FragmentKitchenBinding;
 

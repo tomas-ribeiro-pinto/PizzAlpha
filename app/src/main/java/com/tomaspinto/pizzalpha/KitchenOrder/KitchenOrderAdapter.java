@@ -46,6 +46,7 @@ public class KitchenOrderAdapter extends RecyclerView.Adapter<KitchenOrderViewHo
     @Override
     public void onBindViewHolder(@NonNull KitchenOrderViewHolder holder, int position) {
         holder.timer.setText(items.get(position).getSeconds());
+        holder.setIsRecyclable(false);
         int time = Integer.parseInt(items.get(position).getSeconds());
         if(time > 300 && time <= 600)
         {
@@ -55,6 +56,7 @@ public class KitchenOrderAdapter extends RecyclerView.Adapter<KitchenOrderViewHo
         {
             holder.tcolor.setBackgroundTintList(context.getColorStateList(R.color.red));
         }
+
         holder.order.setText("#" + items.get(position).getId());
         holder.table.setText(items.get(position).getTable());
         holder.layout.setOnClickListener(new View.OnClickListener() {
