@@ -26,4 +26,7 @@ public interface ProductDao {
 
     @Query("SELECT * FROM `product` WHERE productId = :id")
     Product get(int id);
+
+    @Query("SELECT * FROM `product` WHERE title = :name")
+    Product get(String name);
 }

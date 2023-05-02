@@ -18,23 +18,42 @@ import com.tomaspinto.pizzalpha.Data.OrderProduct;
 import com.tomaspinto.pizzalpha.Data.Product;
 import com.tomaspinto.pizzalpha.KitchenProduct.KitchenProductAdapter;
 import com.tomaspinto.pizzalpha.KitchenProduct.KitchenProductItem;
+import com.tomaspinto.pizzalpha.MainActivity;
 import com.tomaspinto.pizzalpha.R;
 import com.tomaspinto.pizzalpha.Slip.SlipAdapter;
 import com.tomaspinto.pizzalpha.Slip.SlipItem;
+import com.tomaspinto.pizzalpha.ui.kitchenMenu.KitchenFragment;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class KitchenOrderAdapter extends RecyclerView.Adapter<KitchenOrderViewHolder> {
 
     Context context;
     List<KitchenOrderItem> items;
+    private AppRepository db;
 
     public KitchenOrderAdapter(Context context, List<KitchenOrderItem> items) {
         this.context = context;
         this.items = items;
+        db = new AppRepository(AppDatabase.getDatabase(context));
+        TimerTask task = new TimerTask() {
+                @Override
+                public void run ()
+                {
+                    ((MainActivity) context).runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            setData(db.getOrderList());
+                        }
+                    });
+                }
+            };
+        new Timer().schedule(task, 0, 1000);
     }
 
     @NonNull
@@ -66,14 +85,11 @@ public class KitchenOrderAdapter extends RecyclerView.Adapter<KitchenOrderViewHo
                 String str = (String) holder.order.getText();
                 String[] arrOfStr = str.split("#", 2);
                 int id = Integer.parseInt(arrOfStr[1]);
-                AppRepository db = new AppRepository(AppDatabase.getDatabase(v.getContext()));
 
                 db.updateOrder(true, id);
                 setData(db.getOrderList());
             }
         });
-
-        AppRepository db = new AppRepository(AppDatabase.getDatabase(context.getApplicationContext()));
 
         List<OrderProduct> orderProducts = db.getOrderProductList(items.get(position).getId());
 
@@ -112,15 +128,22 @@ public class KitchenOrderAdapter extends RecyclerView.Adapter<KitchenOrderViewHo
 
                     Date currentDate = new Date();
                     String seconds = String.valueOf(((currentDate.getTime() - order.date.getTime()) / 1000));
+                    int diff = Integer.parseInt(seconds);
 
                     String table = String.valueOf(order.table.tableName);
 
-                    itemsChanged.add(new KitchenOrderItem(id, seconds, table));
+                    if(diff < 999)
+                    {
+                        itemsChanged.add(new KitchenOrderItem(id, seconds, table));
+                    }
+                    else
+                    {
+                        db.updateOrder(true, id);
+                    }
                 }
             }
             this.items = itemsChanged;
             notifyDataSetChanged();
         }
     }
-
 }

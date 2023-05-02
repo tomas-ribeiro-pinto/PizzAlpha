@@ -5,9 +5,11 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.ActivityOptions;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -47,6 +49,9 @@ public class reviewOrder extends AppCompatActivity {
         Order order = orderProducts.get(0).order;
 
         String total = bundle.getString("total");
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setTitle("Review Order");
 
         createReviewSlip(total);
 
@@ -98,5 +103,10 @@ public class reviewOrder extends AppCompatActivity {
 
         TextView price = findViewById(R.id.price2);
         price.setText(total);
+    }
+
+    public boolean onOptionsItemSelected(MenuItem item){
+        finish();
+        return true;
     }
 }

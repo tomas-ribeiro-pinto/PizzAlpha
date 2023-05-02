@@ -106,4 +106,8 @@ public class AppRepository {
     public Product getProduct(int id) {
         return productList.get(id-1);
     }
+
+    public Product getProduct(String name) {
+        return productDao.get(name);
+    }
 }

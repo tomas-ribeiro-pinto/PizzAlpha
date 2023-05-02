@@ -79,12 +79,14 @@ public class PopUpClass {
         //Initialize list of products to be added to bill
 
         TextView productLabel = popupView.findViewById(R.id.productName);
+        TextView priceLabel = popupView.findViewById(R.id.priceLabel);
         TextView ingredientsLabel = popupView.findViewById(R.id.ingredients);
         EditText currentQty = popupView.findViewById(R.id.itemQty);
 
         ArrayList<OrderProduct> items = new ArrayList<>();
 
         productLabel.setText(product.name);
+        priceLabel.setText("£" + String.valueOf(product.basePrice));
 
         List<ProductIngredient> ingredients = db.getProductIngredientList(product.productId);
 
