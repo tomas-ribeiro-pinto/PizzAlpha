@@ -96,7 +96,7 @@ public class menu_waiter extends AppCompatActivity {
                 intent.putParcelableArrayListExtra("orderProducts", orderProducts);
                 intent.putExtra("total", price.getText());
                 intent.putExtra("table", table);
-                startActivity(intent);
+                startActivityForResult(intent, 2);
             }
         });
 
@@ -149,6 +149,22 @@ public class menu_waiter extends AppCompatActivity {
 
         createMenuView(products);
     }
+
+    // Call Back method  to get the orderProducts from other Activity
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data)
+    {
+        super.onActivityResult(requestCode, resultCode, data);
+        // check if the request code is same as what is passed  here it is 2
+        if(requestCode==2)
+        {
+            orderProducts = data.getParcelableArrayListExtra("orderProducts");
+            qty.setText(String.valueOf(orderProducts.size()));
+            total = Order.getOrderTotal(orderProducts);
+            price.setText("£" + String.format("%.2f", total));
+        }
+    }
+
 
     @Override
     public void onBackPressed() {
@@ -208,13 +224,6 @@ public class menu_waiter extends AppCompatActivity {
                 }
 
                 setRecyclerView(newItems);
-
-                /**
-                if(newText.isEmpty())
-                {
-                    searchView.clearFocus();
-                }
-                 **/
 
                 return true;
             }

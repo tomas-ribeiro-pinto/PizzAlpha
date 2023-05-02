@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.view.MenuItem;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -23,6 +24,7 @@ import com.tomaspinto.pizzalpha.Data.Order;
 import com.tomaspinto.pizzalpha.Data.Product;
 import com.tomaspinto.pizzalpha.Data.ProductDao;
 import com.tomaspinto.pizzalpha.Data.Table;
+import com.tomaspinto.pizzalpha.MenuProduct.MenuProductAdapter;
 import com.tomaspinto.pizzalpha.Slip.SlipAdapter;
 import com.tomaspinto.pizzalpha.Slip.SlipItem;
 
@@ -74,7 +76,7 @@ public class reviewOrder extends AppCompatActivity {
         });
 
         editButton.setOnClickListener(v -> {
-            finish();
+            onBackPressed();
         });
 
     }
@@ -99,14 +101,77 @@ public class reviewOrder extends AppCompatActivity {
         }
 
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView.setAdapter(new SlipAdapter(getApplicationContext(),items));
+        SlipAdapter adapter = new SlipAdapter(getApplicationContext(),items);
+        recyclerView.setAdapter(adapter);
+        adapter.notifyDataSetChanged();
+
+        adapter.setQuantityChangeListener(new SlipAdapter.OnQuantityChangeListener() {
+            @Override
+            public void onQuantityChangeListener(Product product, int newQty) {
+                ArrayList<OrderProduct> newItems = new ArrayList<>();
+
+                for(OrderProduct item : orderProducts)
+                {
+                    if(item.o_product.productId != product.productId)
+                    {
+                        newItems.add(item);
+                    }
+                }
+
+                if(newQty == 0)
+                    onDeleteListener(product);
+                else
+                {
+                    for(int i = 0; i < newQty; i++)
+                    {
+                        OrderProduct op = new OrderProduct();
+                        op.o_product = product;
+                        op.order = orderProducts.get(0).order;
+                        newItems.add(op);
+                    }
+                }
+
+                orderProducts = newItems;
+                createReviewSlip(total);
+            }
+
+            @Override
+            public void onDeleteListener(Product product) {
+                ArrayList<OrderProduct> newItems = new ArrayList<>();
+                for(OrderProduct item : orderProducts)
+                {
+                    if(item.o_product.productId != product.productId)
+                    {
+                        newItems.add(item);
+                    }
+                }
+                orderProducts = newItems;
+                if(orderProducts.size()>0)
+                {
+                    createReviewSlip(total);
+                }
+                else
+                {
+                    onBackPressed();
+                }
+            }
+        });
 
         TextView price = findViewById(R.id.price2);
-        price.setText(total);
+        double t = Order.getOrderTotal(orderProducts);
+        price.setText("£" + String.format("%.2f", t));
+    }
+
+    @Override
+    public void onBackPressed() {
+        Intent intent = new Intent();
+        intent.putParcelableArrayListExtra("orderProducts", orderProducts);
+        setResult(2,intent);
+        finish();//finishing activity
     }
 
     public boolean onOptionsItemSelected(MenuItem item){
-        finish();
+        onBackPressed();
         return true;
     }
 }
